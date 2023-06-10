@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, make_response
 from werkzeug.utils import secure_filename
 app = Flask(__name__)
+root_url    = ''
+pic_folder  = 'static/'
 
 @app.route('/')
 def index():
@@ -10,10 +12,10 @@ def index():
 def display_image():
     if request.method=='POST':
         file = request.files['file']
-        file.save('static/'+secure_filename(file.filename))
+        file.save(pic_folder+secure_filename(file.filename))
         image_display = f'''
         <!doctype html>
-        <img src="static/{secure_filename(file.filename)}">
+        <img src="{root_url+pic_folder}/{secure_filename(file.filename)}">
         '''
         return image_display
 
