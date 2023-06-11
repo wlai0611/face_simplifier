@@ -12,7 +12,13 @@ import os
 app = Flask(__name__)
 app.secret_key = os.urandom(1)
 THIS_FOLDER    = Path(__file__).parent.resolve()
-eigenface_path = THIS_FOLDER / "best_eigenfaces.npy"
+
+eigenfaces = {
+  'neither': np.load(THIS_FOLDER / "best_eigenfaces.npy"),
+  'female' : np.load(THIS_FOLDER / "female_eigenfaces.npy"),
+  'male'   : np.load(THIS_FOLDER / "male_eigenfaces.npy"),
+}
+
 static_folder  = THIS_FOLDER / "static"
 
 pic_size    = (116, 116)
@@ -32,6 +38,7 @@ def display_image():
     if request.method=='POST':
         file       = request.files['file']
         gender     = request.form['gender']
+        sexed_eigenfaces = eigenfaces[gender]
         img_path   = static_folder/secure_filename(file.filename)
         file.save(img_path.as_posix())
 
@@ -42,15 +49,18 @@ def display_image():
             flash("Please Upload only JPG or PNG files with at least 1 human face that is front facing.")
             return render_template('index.html')
 
-        eigenfaces = np.load(eigenface_path)
-        reconstruct_face = compress_face(new_face = pic_array, eigenfaces = eigenfaces, n_components=50)
+
+        reconstruct_face = compress_face(new_face = pic_array, eigenfaces = sexed_eigenfaces, n_components=50)
 
         compressed_face_filename = f"reconstruct{secure_filename(file.filename)}"
         compressed_face_path     = static_folder / compressed_face_filename
         cv2.imwrite(compressed_face_path.as_posix(), reconstruct_face)
         image_display = f'''
         <!doctype html>
-        <img src="{retrieval_path}/reconstruct{secure_filename(file.filename)}">
+        Original<br>
+        <img src="{retrieval_path}/{secure_filename(file.filename)}" width="500" height="500"><br>
+        Compressed<br>
+        <img src="{retrieval_path}/reconstruct{secure_filename(file.filename)}" width="500" height="500"><br>
         <p>{gender}</p>
         '''
 
