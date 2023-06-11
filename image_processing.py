@@ -19,7 +19,7 @@ def extract_face(gray):
         x,y,w,h = faces[0]
         return gray[y:y+h,x:x+w]
     else:
-        raise ValueError("No cat face detected")
+        raise ValueError("No face detected")
     
 def pipeline(pic_array, pic_size):
     greyscale_array = convert_to_greyscale(pic_array)
@@ -27,3 +27,8 @@ def pipeline(pic_array, pic_size):
     zoom_in_face    =  extract_face(greyscale_array)
     resized_face    = cv2.resize(src = zoom_in_face, dsize=pic_size)
     return resized_face
+
+def compress_face(new_face, eigenfaces, n_components = 90):
+    top_n_eigenfaces = eigenfaces[:,:n_components] 
+    reconstruct      = top_n_eigenfaces @ top_n_eigenfaces.T @ new_face.flatten()
+    return reconstruct.reshape(new_face.shape)

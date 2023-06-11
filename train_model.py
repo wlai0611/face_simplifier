@@ -53,5 +53,6 @@ fig, ax = plt.subplots(ncols=2)
 ax[0].imshow(new_face)
 ax[1].imshow(reconstruct)
 plt.show()
+np.save(open('best_eigenfaces.npy','wb'), best_eigenfaces)
 print()
 
