@@ -4,3 +4,7 @@ Matthew Turk, Alex Pentland; Eigenfaces for Recognition. J Cogn Neurosci 1991; 3
 
 I made extensive use of this tutorial explanation of the paper from pawangfg:
 https://www.geeksforgeeks.org/ml-face-recognition-using-eigenfaces-pca-algorithm/
+
+The picture datasetes from:
+- https://www.kaggle.com/datasets/atulanandjha/lfwpeople
+- https://www.kaggle.com/datasets/ashwingupta3012/human-faces

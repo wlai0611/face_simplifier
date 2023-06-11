@@ -7,8 +7,7 @@ def convert_to_greyscale(img):
     grey_image = np.tensordot(a=img, b=color_weights, axes=(2,0))
     return grey_image
 
-cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
-
+cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')
 def extract_face(gray):
     #Taken from
     #https://www.tutorialspoint.com/how-to-detect-cat-faces-in-an-image-in-opencv-using-python#:~:text=Steps%201%20Import%20the%20required%20library.%20...%202,the%20original%20image%20using%20cv2.rectangle%20%28%29.%20More%20items
