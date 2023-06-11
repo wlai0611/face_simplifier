@@ -14,10 +14,13 @@
 {% block body %}
   <form method=post enctype=multipart/form-data action="/display_image">
         <input type=file name=file>
+        <br>
         <input type="radio" id="male" name="gender" value="male">
         <label for="male">Male</label><br>
         <input type="radio" id="female" name="gender" value="female">
         <label for="female">Female</label><br>
+        <input type="radio" id="neither" name="gender" value="neither">
+        <label for="neither">Neither</label><br>
         <input type=submit value=Upload>
       </form>
 {% endblock %}

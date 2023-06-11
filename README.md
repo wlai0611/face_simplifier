@@ -8,6 +8,7 @@ https://www.geeksforgeeks.org/ml-face-recognition-using-eigenfaces-pca-algorithm
 The picture datasetes from:
 - https://www.kaggle.com/datasets/atulanandjha/lfwpeople
 - https://www.kaggle.com/datasets/ashwingupta3012/human-faces
+- https://www.kaggle.com/datasets/ashwingupta3012/male-and-female-faces-dataset
 
 TODO:
 - ~~Error Message if No Face detected~~
