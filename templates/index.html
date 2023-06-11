@@ -1,10 +1,23 @@
+<!--
 <html>
 <body>
-	
+
 	<form method=post enctype=multipart/form-data action="/display_image">
         <input type=file name=file>
         <input type=submit value=Upload>
       </form>
-		
+
 </body>
 </html>
+-->
+{% extends "layout.html" %}
+{% block body %}
+  <form method=post enctype=multipart/form-data action="/display_image">
+        <input type=file name=file>
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">Male</label><br>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">Female</label><br>
+        <input type=submit value=Upload>
+      </form>
+{% endblock %}

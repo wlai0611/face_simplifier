@@ -10,6 +10,7 @@ The picture datasetes from:
 - https://www.kaggle.com/datasets/ashwingupta3012/human-faces
 
 TODO:
-- Error Message if No Face detected
+- ~~Error Message if No Face detected~~
+- Delete image button
 - Scroll Bar for N components
 - Biological Sex Selection
