@@ -1,3 +1,3 @@
 venv/
 __pycache__/
-lfw_funneled/
+lfw_funneled/*
