@@ -20,3 +20,10 @@ def extract_face(gray):
         return gray[y:y+h,x:x+w]
     else:
         raise ValueError("No cat face detected")
+    
+def pipeline(pic_array, pic_size):
+    greyscale_array = convert_to_greyscale(pic_array)
+    greyscale_array = np.uint8(greyscale_array)
+    zoom_in_face    =  extract_face(greyscale_array)
+    resized_face    = cv2.resize(src = zoom_in_face, dsize=pic_size)
+    return resized_face

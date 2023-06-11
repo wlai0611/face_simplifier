@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from image_processing import convert_to_greyscale, extract_face
+from image_processing import convert_to_greyscale, extract_face, pipeline
 import os
 import re
 import matplotlib.pyplot as plt
@@ -11,7 +11,7 @@ data_subfolders = os.listdir(data_folder)
 picture_paths    = [[f'{data_folder}/{subfolder}/{path}' for path in os.listdir(data_folder+'/'+subfolder)][0] for subfolder in data_subfolders
                     if re.findall(pattern='^[_a-zA-Z]+$', string=subfolder)]
 rng = np.random.RandomState(seed=1)
-n_samples = 100
+n_samples = 1000
 sampling_index = rng.randint(low = 0, high = len(picture_paths), size = n_samples)
 picture_length = 250
 picture_width  = 250
@@ -40,7 +40,18 @@ flat_faces = np.array(flat_face_list).T
 
 average_face = flat_faces.mean(axis=1)[:,np.newaxis]
 centered_faces = flat_faces - average_face
-normalized_faces = centered_faces/np.sum(centered_faces**2,axis=0)**0.5
+normalized_faces = centered_faces/np.sum(centered_faces**2,axis=0)**0.5 
 
+flat_eigenfaces,importances,vh = np.linalg.svd(normalized_faces, full_matrices=False)
+best_eigenfaces = flat_eigenfaces[:,:100]
+new_face = cv2.imread('lfw_funneled/Zumrati_Juma/Zumrati_Juma_0001.jpg')
+new_face = pipeline(new_face, pic_size=pic_size)
+plt.imshow(new_face); plt.show()
+reconstruct = best_eigenfaces @ best_eigenfaces.T @ new_face.flatten()
+reconstruct = reconstruct.reshape(pic_size)   
+fig, ax = plt.subplots(ncols=2)
+ax[0].imshow(new_face)
+ax[1].imshow(reconstruct)
+plt.show()
 print()
 
