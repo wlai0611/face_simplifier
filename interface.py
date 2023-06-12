@@ -39,10 +39,17 @@ def show_image_in_html(image_path):
         Original<br>
         <img src="{retrieval_path}/{image_path}" width="500" height="500"><br>
         Compressed<br>
+
         <form action="/remove_features" method="post">
         <button type="submit">Remove Features</button>
         <input type="hidden" name="filename" value="{image_path}">
         </form>
+
+        <form action="/add_features" method="post">
+        <button type="submit">Add Features</button>
+        <input type="hidden" name="filename" value="{image_path}">
+        </form>
+
         <img src="{retrieval_path}/reconstruct{image_path}" width="500" height="500"><br>
         
     '''
@@ -81,7 +88,15 @@ def display_image():
 def remove_features():
    if request.method=='POST':
       filename = request.form['filename']
-      projector.add_components(5)
+      projector.add_components(-10)
+      cv2.imwrite(projector.filepath, projector.projection)
+      return show_image_in_html(filename)
+   
+@app.route("/add_features", methods=['POST'])
+def add_features():
+   if request.method=='POST':
+      filename = request.form['filename']
+      projector.add_components(10)
       cv2.imwrite(projector.filepath, projector.projection)
       return show_image_in_html(filename)
 
