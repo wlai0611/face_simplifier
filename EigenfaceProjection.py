@@ -10,7 +10,7 @@ class EigenfaceProjection():
     def project_face(self):
         top_n_eigenfaces = self.eigenfaces[:,:self.n_components] 
         reconstruct      = top_n_eigenfaces @ top_n_eigenfaces.T @ self.original_image.flatten()
-        self.projection  = reconstruct.reshape(self.original_image.shape)
+        self.projection  = np.uint8(reconstruct.reshape(self.original_image.shape))
     
     def add_components(self, n_components_to_add):
         if type(n_components_to_add).__name__ != 'int':
@@ -33,3 +33,4 @@ class EigenfaceProjection():
 
     def set_filepath(self, filepath):
         self.filepath = filepath
+
