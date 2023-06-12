@@ -1,6 +1,6 @@
 
 # A very simple Flask Hello World app for you to get started with...
-
+from EigenfaceProjection import EigenfaceProjection
 from flask import Flask, render_template, request, flash
 from werkzeug.utils import secure_filename
 from image_processing import convert_to_greyscale, extract_face, pipeline, compress_face
@@ -63,8 +63,10 @@ def display_image():
             flash("Please Upload only JPG or PNG files with at least 1 human face that is front facing.")
             return render_template('index.html')
 
-
-        reconstruct_face = compress_face(new_face = pic_array, eigenfaces = sexed_eigenfaces, n_components=50)
+        projection = EigenfaceProjection(original_image = pic_array, 
+                                         eigenfaces     = sexed_eigenfaces,
+                                         n_components   = 50)
+        reconstruct_face = projection.project_face()
 
         compressed_face_filename = f"reconstruct{secure_filename(file.filename)}"
         compressed_face_path     = static_folder / compressed_face_filename
