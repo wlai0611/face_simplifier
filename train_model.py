@@ -25,9 +25,9 @@ def male_paths():
     absolute_paths = [f"{folder_name}/{filename}" for filename in filenames]
     return absolute_paths
 
-picture_paths = male_paths()
+picture_paths = female_paths()
 rng = np.random.RandomState(seed=1)
-n_samples = 200
+n_samples = 600
 sampling_index = rng.randint(low = 0, high = len(picture_paths), size = n_samples)
 picture_length = 250
 picture_width  = 250
@@ -71,7 +71,7 @@ fig, ax = plt.subplots(ncols=2)
 ax[0].imshow(new_face)
 ax[1].imshow(reconstruct)
 plt.show()
-np.save(open('male_eigenfaces.npy','wb'), flat_eigenfaces)
+np.save(open('female_eigenfaces_600.npy','wb'), flat_eigenfaces)
 print()
 
 

@@ -33,6 +33,20 @@ else:
 def index():
     return render_template('index.html')
 
+def show_image_in_html(image_path):
+   return f'''
+        <!doctype html>
+        Original<br>
+        <img src="{retrieval_path}/{image_path}" width="500" height="500"><br>
+        Compressed<br>
+        <form action="/compress_more" method="post">
+        <button type="submit">Compress More</button>
+        <input type="hidden" name="filename" value="{image_path}">
+        </form>
+        <img src="{retrieval_path}/reconstruct{image_path}" width="500" height="500"><br>
+        
+    '''
+
 @app.route('/display_image', methods=['GET','POST'])
 def display_image():
     if request.method=='POST':
@@ -55,17 +69,14 @@ def display_image():
         compressed_face_filename = f"reconstruct{secure_filename(file.filename)}"
         compressed_face_path     = static_folder / compressed_face_filename
         cv2.imwrite(compressed_face_path.as_posix(), reconstruct_face)
-        image_display = f'''
-        <!doctype html>
-        Original<br>
-        <img src="{retrieval_path}/{secure_filename(file.filename)}" width="500" height="500"><br>
-        Compressed<br>
-        <img src="{retrieval_path}/reconstruct{secure_filename(file.filename)}" width="500" height="500"><br>
-        <p>{gender}</p>
-        '''
-
+        image_display = show_image_in_html(secure_filename(file.filename))
         return image_display
 
+@app.route("/compress_more", methods=['POST'])
+def compress_more():
+   if request.method=='POST':
+      filename = request.form['filename']
+      return show_image_in_html(filename)
 
 if __name__ == '__main__':
    app.run(debug = True)
