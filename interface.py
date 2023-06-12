@@ -62,15 +62,18 @@ def display_image():
         except ValueError:
             flash("Please Upload only JPG or PNG files with at least 1 human face that is front facing.")
             return render_template('index.html')
-
-        projection = EigenfaceProjection(original_image = pic_array, 
+        global projector
+        projector = EigenfaceProjection(original_image = pic_array, 
                                          eigenfaces     = sexed_eigenfaces,
                                          n_components   = 50)
-        reconstruct_face = projection.project_face()
+        projector.project_face()
+        reconstruct_face = projector.projection
 
         compressed_face_filename = f"reconstruct{secure_filename(file.filename)}"
         compressed_face_path     = static_folder / compressed_face_filename
-        cv2.imwrite(compressed_face_path.as_posix(), reconstruct_face)
+        projector.set_filepath(compressed_face_path.as_posix())
+
+        cv2.imwrite(projector.filepath, reconstruct_face)
         image_display = show_image_in_html(secure_filename(file.filename))
         return image_display
 
@@ -78,6 +81,8 @@ def display_image():
 def remove_features():
    if request.method=='POST':
       filename = request.form['filename']
+      projector.add_components(5)
+      cv2.imwrite(projector.filepath, projector.projection)
       return show_image_in_html(filename)
 
 if __name__ == '__main__':
