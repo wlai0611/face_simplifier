@@ -39,8 +39,8 @@ def show_image_in_html(image_path):
         Original<br>
         <img src="{retrieval_path}/{image_path}" width="500" height="500"><br>
         Compressed<br>
-        <form action="/compress_more" method="post">
-        <button type="submit">Compress More</button>
+        <form action="/remove_features" method="post">
+        <button type="submit">Remove Features</button>
         <input type="hidden" name="filename" value="{image_path}">
         </form>
         <img src="{retrieval_path}/reconstruct{image_path}" width="500" height="500"><br>
@@ -72,8 +72,8 @@ def display_image():
         image_display = show_image_in_html(secure_filename(file.filename))
         return image_display
 
-@app.route("/compress_more", methods=['POST'])
-def compress_more():
+@app.route("/remove_features", methods=['POST'])
+def remove_features():
    if request.method=='POST':
       filename = request.form['filename']
       return show_image_in_html(filename)
