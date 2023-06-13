@@ -1,5 +1,5 @@
 import numpy as np
-
+import re
 class EigenfaceProjection():
     
     def __init__(self, original_image, n_components, eigenfaces):
@@ -31,6 +31,11 @@ class EigenfaceProjection():
 
         self.projection =  flat_projection.reshape(self.original_image.shape)
 
-    def set_filepath(self, filepath):
-        self.filepath = filepath
+    def set_filepath(self, path):
+        self.original_filepath = path.as_posix()
+        folder = path.parent
+        reconstructed_name = 'reconstruct'+path.name
+        reconstructed_path = folder/reconstructed_name
+        self.reconstruct_filepath = reconstructed_path.as_posix()
+    
 

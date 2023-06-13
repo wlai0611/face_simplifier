@@ -8,6 +8,8 @@ import cv2
 import numpy as np
 from pathlib import Path
 import os
+import base64
+import re
 
 app = Flask(__name__)
 app.secret_key = os.urandom(1)
@@ -33,24 +35,32 @@ else:
 def index():
     return render_template('index.html')
 
-def show_image_in_html(image_path):
+def image_to_html(image_path):
+   image_file   = open(image_path, 'rb')
+   image_bytes  = base64.b64encode(image_file.read())
+   bytes_string = re.findall("b'(.+)'", str(image_bytes))[0]
+   file_extension = re.findall('\.([a-zA-Z]+)$', image_path)[0]
+   image_element= f'<img src="data:image/{file_extension};base64, {bytes_string}" width="500" height="500">'
+   return image_element
+
+def show_image_in_html():
+   original_image_element = image_to_html(projector.original_filepath)
+   reconstructed_image_element = image_to_html(projector.reconstruct_filepath)
    return f'''
         <!doctype html>
         Original<br>
-        <img src="{retrieval_path}/{image_path}" width="500" height="500"><br>
+        {original_image_element}<br>
         Compressed<br>
 
         <form action="/remove_features" method="post">
         <button type="submit">Remove Features</button>
-        <input type="hidden" name="filename" value="{image_path}">
         </form>
 
         <form action="/add_features" method="post">
         <button type="submit">Add Features</button>
-        <input type="hidden" name="filename" value="{image_path}">
         </form>
 
-        <img src="{retrieval_path}/reconstruct{image_path}" width="500" height="500"><br>
+        {reconstructed_image_element}<br>
         
     '''
 
@@ -76,29 +86,25 @@ def display_image():
         projector.project_face()
         reconstruct_face = projector.projection
 
-        compressed_face_filename = f"reconstruct{secure_filename(file.filename)}"
-        compressed_face_path     = static_folder / compressed_face_filename
-        projector.set_filepath(compressed_face_path.as_posix())
+        compressed_face_path     = static_folder / secure_filename(file.filename)
+        projector.set_filepath(compressed_face_path)
 
-        cv2.imwrite(projector.filepath, reconstruct_face)
-        image_display = show_image_in_html(secure_filename(file.filename))
-        return image_display
+        cv2.imwrite(projector.reconstruct_filepath, reconstruct_face)
+        return show_image_in_html()
 
 @app.route("/remove_features", methods=['POST'])
 def remove_features():
    if request.method=='POST':
-      filename = request.form['filename']
       projector.add_components(-10)
-      cv2.imwrite(projector.filepath, projector.projection)
-      return show_image_in_html(filename)
+      cv2.imwrite(projector.reconstruct_filepath, projector.projection)
+      return show_image_in_html()
    
 @app.route("/add_features", methods=['POST'])
 def add_features():
    if request.method=='POST':
-      filename = request.form['filename']
       projector.add_components(10)
-      cv2.imwrite(projector.filepath, projector.projection)
-      return show_image_in_html(filename)
+      cv2.imwrite(projector.reconstruct_filepath, projector.projection)
+      return show_image_in_html()
 
 if __name__ == '__main__':
    app.run(debug = True)
