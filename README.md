@@ -15,4 +15,4 @@ TODO:
 - Delete image button
 - Scroll Bar for N components
 - ~~Biological Sex Selection~~
-- Remove Features Does not Change the Picture
+-~~ Remove Features Does not Change the Picture~~
