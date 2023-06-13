@@ -51,11 +51,11 @@ def show_image_in_html():
         Original<br>
         {original_image_element}<br>
         Compressed<br>
-
+        To simplify your face further, click Remove Features.
         <form action="/remove_features" method="post">
         <button type="submit">Remove Features</button>
         </form>
-
+        If the face is too simple and does not resemble your face, click add features.
         <form action="/add_features" method="post">
         <button type="submit">Add Features</button>
         </form>
