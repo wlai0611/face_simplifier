@@ -14,4 +14,5 @@ TODO:
 - ~~Error Message if No Face detected~~
 - Delete image button
 - Scroll Bar for N components
-- Biological Sex Selection
+- ~~Biological Sex Selection~~
+- Remove Features Does not Change the Picture
