@@ -59,7 +59,7 @@ def show_image_in_html():
         <form action="/add_features" method="post">
         <button type="submit">Add Features</button>
         </form>
-
+        <p>{projector.n_components}</p>
         {reconstructed_image_element}<br>
         
     '''
