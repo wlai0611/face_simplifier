@@ -46,8 +46,30 @@ def image_to_html(image_path):
 def show_image_in_html():
    original_image_element = image_to_html(projector.original_filepath)
    reconstructed_image_element = image_to_html(projector.reconstruct_filepath)
+   n_eigenfaces = projector.eigenfaces.shape[1]
+   n_ticks = 5
+   eigenfaces_ticks = np.arange(start = 0, stop = n_eigenfaces, step = n_eigenfaces//n_ticks)
    return f'''
         <!doctype html>
+        <style>
+        datalist {{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        writing-mode: vertical-lr;
+        width: 200px;
+        }}
+
+        option {{
+          padding: 0;
+        }}
+
+        input[type="range"] {{
+          width: 200px;
+          margin: 0;
+        }}
+
+        </style>
         <script>window.onbeforeunload=function(){{fetch('/close');}};</script>
         Original<br>
         {original_image_element}<br>
@@ -61,6 +83,19 @@ def show_image_in_html():
         <button type="submit">Add Features</button>
         </form>
         <p>{projector.n_components}</p>
+
+        <form action="/update_n_eigenfaces" method="post">
+        <label for="n_eigenfaces">Choose the number of eigenfaces:</label><br />
+        <input type="range" id="n_eigenfaces" name="num_eigenfaces" list="values" />
+
+        <datalist id="values">
+          <option value="{eigenfaces_ticks[0]}" label="{eigenfaces_ticks[0]}"></option>
+          <option value="{eigenfaces_ticks[1]}" label="{eigenfaces_ticks[1]}"></option>
+          <option value="{eigenfaces_ticks[2]}" label="{eigenfaces_ticks[2]}"></option>
+          <option value="{eigenfaces_ticks[3]}" label="{eigenfaces_ticks[3]}"></option>
+          <option value="{eigenfaces_ticks[4]}" label="{eigenfaces_ticks[4]}"></option>
+        </datalist>
+        </form>
         {reconstructed_image_element}<br>
         <form action="/">
         <button type="submit">Try Another Face</button>
