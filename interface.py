@@ -91,7 +91,7 @@ def display_image():
         try:
             pic_array  = pipeline(pic_array, pic_size=pic_size)
         except ValueError:
-            flash("Please Upload only JPG or PNG files with at least 1 human face that is front facing.")
+            flash("Please Upload only JPG or PNG files with at least 1 human face that is front facing.\nTry removing glasses and turning off camera flash.")
             return render_template('index.html')
         global projector
         projector = EigenfaceProjection(original_image = pic_array, 
