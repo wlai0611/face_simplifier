@@ -61,7 +61,9 @@ def show_image_in_html():
         </form>
         <p>{projector.n_components}</p>
         {reconstructed_image_element}<br>
-        
+        <form action="/">
+        <button type="submit">Try Another Face</button>
+        </form>
     '''
 
 @app.route('/display_image', methods=['GET','POST'])
