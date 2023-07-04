@@ -48,6 +48,7 @@ def show_image_in_html():
    reconstructed_image_element = image_to_html(projector.reconstruct_filepath)
    return f'''
         <!doctype html>
+        <script>window.onbeforeunload=function(){{fetch('/close');}};</script>
         Original<br>
         {original_image_element}<br>
         Compressed<br>
@@ -65,6 +66,17 @@ def show_image_in_html():
         <button type="submit">Try Another Face</button>
         </form>
     '''
+
+@app.errorhandler(500)
+def internal_error(error):
+
+    return "500 error"
+
+@app.route('/close')
+def delete_image():
+   os.remove(projector.original_filepath)
+   os.remove(projector.reconstruct_filepath)
+   return f"Deleted {projector.original_filepath} and {projector.reconstruct_filepath}"
 
 @app.route('/display_image', methods=['GET','POST'])
 def display_image():
@@ -109,4 +121,4 @@ def add_features():
       return show_image_in_html()
 
 if __name__ == '__main__':
-   app.run(debug = True)
+   app.run()
