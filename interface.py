@@ -70,23 +70,15 @@ def show_image_in_html():
         }}
 
         </style>
-        <script>window.onbeforeunload=function(){{fetch('/close');}};</script>
+        <!-- <script>window.onbeforeunload=function(){{fetch('/close');}};</script> -->
         Original<br>
         {original_image_element}<br>
         Compressed<br>
-        To simplify your face further, click Remove Features.<br>
-        <form action="/remove_features" method="post">
-        <button type="submit">Remove Features</button>
-        </form>
-        If the face is too simple and does not resemble your face, click add features.<br>
-        <form action="/add_features" method="post">
-        <button type="submit">Add Features</button>
-        </form>
         <p>{projector.n_components}</p>
 
-        <form action="/update_n_eigenfaces" method="post">
+        <form action="/add_features" method="post">
         <label for="n_eigenfaces">Choose the number of eigenfaces:</label><br />
-        <input type="range" id="n_eigenfaces" name="num_eigenfaces" list="values" />
+        <input type="range" id="n_eigenfaces" name="num_eigenfaces" value="{projector.n_components}" list="values" min = "0" max = "{projector.eigenfaces.shape[1]}"/>
 
         <datalist id="values">
           <option value="{eigenfaces_ticks[0]}" label="{eigenfaces_ticks[0]}"></option>
@@ -94,7 +86,9 @@ def show_image_in_html():
           <option value="{eigenfaces_ticks[2]}" label="{eigenfaces_ticks[2]}"></option>
           <option value="{eigenfaces_ticks[3]}" label="{eigenfaces_ticks[3]}"></option>
           <option value="{eigenfaces_ticks[4]}" label="{eigenfaces_ticks[4]}"></option>
+          <option value="{projector.eigenfaces.shape[1]}" label="{projector.eigenfaces.shape[1]}"></option>
         </datalist>
+        <button type="submit">Update the Number of Eigenfaces</button>
         </form>
         {reconstructed_image_element}<br>
         <form action="/">
@@ -131,7 +125,7 @@ def display_image():
         global projector
         projector = EigenfaceProjection(original_image = pic_array, 
                                          eigenfaces     = sexed_eigenfaces,
-                                         n_components   = 50)
+                                         n_components   = sexed_eigenfaces.shape[1]//2)
         projector.project_face()
         reconstruct_face = projector.projection
 
@@ -151,7 +145,8 @@ def remove_features():
 @app.route("/add_features", methods=['POST'])
 def add_features():
    if request.method=='POST':
-      projector.add_components(10)
+      n_eigenfaces_update = int(request.form["num_eigenfaces"]) - projector.n_components
+      projector.add_components(n_eigenfaces_update)
       cv2.imwrite(projector.reconstruct_filepath, projector.projection)
       return show_image_in_html()
 
