@@ -17,19 +17,13 @@ THIS_FOLDER    = Path(__file__).parent.resolve()
 
 eigenfaces = {
   'neither': np.load(THIS_FOLDER / "best_eigenfaces.npy"),
-  'female' : np.load(THIS_FOLDER / "female_eigenfaces.npy"),
-  'male'   : np.load(THIS_FOLDER / "male_eigenfaces.npy"),
+  'female' : np.load(THIS_FOLDER / "female_eigenfaces_1000.npy"),
+  'male'   : np.load(THIS_FOLDER / "male_eigenfaces_1000.npy"),
 }
 
 static_folder  = THIS_FOLDER / "static"
 
 pic_size    = (116, 116)
-
-production = False
-if production:
-  retrieval_path = 'https://www.pythonanywhere.com/user/walterlai/files/home/walterlai/mysite/static'
-else:
-  retrieval_path = 'static'
 
 @app.route('/')
 def index():
@@ -71,11 +65,13 @@ def show_image_in_html():
 
         </style>
         <!-- <script>window.onbeforeunload=function(){{fetch('/close');}};</script> -->
-        Original<br>
+        <h2>Original</h2>
         {original_image_element}<br>
-        Compressed<br>
-        <p>{projector.n_components}</p>
-
+        <br>
+        Below your face is compressed using {projector.n_components} eigenfaces.<br>
+        To compress the face and make it simpler, drag the slider to the left to a smaller number of eigenfaces and click Update Number Eigenfaces.<br>
+        If the face is too simple and does not look like your face, drag the slider to the right to bigger number of eigenfaces and click Update Number Eigenfaces.<br>
+        
         <form action="/add_features" method="post">
         <label for="n_eigenfaces">Choose the number of eigenfaces:</label><br />
         <input type="range" id="n_eigenfaces" name="num_eigenfaces" value="{projector.n_components}" list="values" min = "0" max = "{projector.eigenfaces.shape[1]}"/>
@@ -90,6 +86,7 @@ def show_image_in_html():
         </datalist>
         <button type="submit">Update the Number of Eigenfaces</button>
         </form>
+        <h2>Compressed Face</h2><br>
         {reconstructed_image_element}<br>
         <form action="/">
         <button type="submit">Try Another Face</button>
