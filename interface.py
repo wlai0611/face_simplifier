@@ -34,12 +34,13 @@ def image_to_html(image_path):
    image_bytes  = base64.b64encode(image_file.read())
    bytes_string = re.findall("b'(.+)'", str(image_bytes))[0]
    file_extension = re.findall('\.([a-zA-Z]+)$', image_path)[0]
-   image_element= f'<img src="data:image/{file_extension};base64, {bytes_string}" width="500" height="500">'
-   return image_element
+   src_string     = f"data:image/{file_extension};base64, {bytes_string}"
+   image_element  = f'<img src="{src_string}" width="500" height="500">'
+   return file_extension, src_string, image_element
 
 def show_image_in_html():
-   original_image_element = image_to_html(projector.original_filepath)
-   reconstructed_image_element = image_to_html(projector.reconstruct_filepath)
+   og_extension, og_src, original_image_element = image_to_html(projector.original_filepath)
+   new_extension, new_src, reconstructed_image_element = image_to_html(projector.reconstruct_filepath)
    n_eigenfaces = projector.eigenfaces.shape[1]
    n_ticks = 5
    eigenfaces_ticks = np.arange(start = 0, stop = n_eigenfaces, step = n_eigenfaces//n_ticks)
@@ -88,6 +89,7 @@ def show_image_in_html():
         </form>
         <h2>Compressed Face</h2><br>
         {reconstructed_image_element}<br>
+        <a download="compressed.{new_extension}" href="{new_src}"><button>Download Image</button></a>
         <form action="/">
         <button type="submit">Try Another Face</button>
         </form>
